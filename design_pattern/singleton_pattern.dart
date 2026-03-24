@@ -48,6 +48,45 @@ class AppConfig {
   String local = 'EN';
 }
 
+// =============================================================================
+// Common Pitfalls to Avoid
+// =============================================================================
+
+/// ❌ BAD - Singleton with mutable shared state accessible everywhere
+///
+/// Problem: The `sharedState` list can be modified by any part of the app,
+/// leading to unpredictable behavior, race conditions, and hard-to-debug issues.
+/// When multiple parts of your code modify the same mutable collection,
+/// it becomes nearly impossible to track who changed what and when.
+class BadSingleton {
+  static final instance = BadSingleton._();
+  BadSingleton._();
+
+  // Dangerous: Anyone can add/remove/modify items
+  List<dynamic> sharedState = [];
+}
+
+/// ✅ GOOD - Singleton with read-only or protected state
+///
+/// Solution: Use `late final` for one-time initialization or provide
+/// controlled access through getters. This prevents accidental modifications
+/// and makes the data flow in your app more predictable.
+///
+/// Key improvements:
+/// - `late final` ensures the value is set once and never changed
+/// - Private field `_apiKey` prevents direct external access
+/// - Public getter provides read-only access
+/// - Explicit `init()` method controls when initialization happens
+class GoodSingleton {
+  static final instance = GoodSingleton._();
+  GoodSingleton._();
+
+  late final String _apiKey; // Initialized once, immutable after
+
+  void init(String key) => _apiKey = key;
+  String get apiKey => _apiKey; // Read-only access
+}
+
 void main() {
   // Access the same instance everywhere in the app
   AppConfig.instance.baseUrl = 'https://api.prod.com';
