@@ -132,3 +132,65 @@ class RetryApiClient implements ApiClient {
     return _apiClient.post(endpoint, body); // no retying for POST
   }
 }
+
+void main() async {
+  // Builder function to stack decorators
+  ApiClient buildApiClient(String baseUrl) {
+    // Stack decorators: Retry -> Cache -> Logging -> HTTP
+    return RetryApiClient(
+      CachingApiClient(LoggingApiClient(HttpApiClient(baseUrl))),
+    );
+  }
+
+  final client = buildApiClient('https://jsonplaceholder.typicode.com');
+
+  print('=== Example 1: Simple GET request ===');
+  try {
+    final user = await client.get('/users/1');
+    print('User: ${user['name']}');
+  } catch (e) {
+    print('Error: $e');
+  }
+
+  print('\n=== Example 2: Second GET (from cache) ===');
+  try {
+    final user = await client.get('/users/1'); // Should hit cache
+    print('User: ${user['name']}');
+  } catch (e) {
+    print('Error: $e');
+  }
+
+  print('\n=== Example 3: POST request ===');
+  try {
+    final newPost = await client.post('/posts', {
+      'title': 'My Post',
+      'body': 'This is a test post',
+      'userId': 1,
+    });
+    print('Created post with ID: ${newPost['id']}');
+  } catch (e) {
+    print('Error: $e');
+  }
+
+  print('\n=== Example 4: Using individual decorators ===');
+  // Just HTTP client (no decorators)
+  final simpleClient = HttpApiClient('https://jsonplaceholder.typicode.com');
+  final data1 = await simpleClient.get('/users/2');
+  print('Simple: ${data1['name']}');
+
+  // HTTP + Logging only
+  final loggedClient = LoggingApiClient(
+    HttpApiClient('https://jsonplaceholder.typicode.com'),
+  );
+  final data2 = await loggedClient.get('/users/3');
+  print('Logged: ${data2['name']}');
+
+  // HTTP + Caching only
+  final cachedClient = CachingApiClient(
+    HttpApiClient('https://jsonplaceholder.typicode.com'),
+  );
+  await cachedClient.get('/users/4'); // First call
+  await cachedClient.get('/users/4'); // Cached call
+
+  print('\nDone!');
+}
