@@ -1,5 +1,3 @@
-import 'dart:vmservice_io';
-
 class Contact {
   Contact(this.name, this.phone, [this.email]); // [] = optional positional
   final String name;
