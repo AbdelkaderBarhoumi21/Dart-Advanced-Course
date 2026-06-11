@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'dart:convert'; // jsonEncode — built in!
+import 'dart:convert'; 
 import 'dart:io';
 
 class Weather {
@@ -15,7 +15,7 @@ class Weather {
   };
 }
 
-// A small Result type via a sealed class (Dart 3+)
+
 sealed class Result<T> {}
 
 class Ok<T> extends Result<T> {
