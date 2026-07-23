@@ -1,0 +1,35 @@
+[
+ {
+  "id": "ORD-1784838264989",
+  "items": [
+   {
+    "product": "Apple",
+    "qty": 6,
+    "subtotal": 3.0
+   },
+   {
+    "product": "Laptop",
+    "qty": 1,
+    "subtotal": 999.99
+   }
+  ],
+  "subtotal": 1002.99,
+  "discountAmount": 100.29899999999999,
+  "total": 902.691,
+  "placedAt": "2026-07-23T21:24:24.991417"
+ },
+ {
+  "id": "ORD-1784838265018",
+  "items": [
+   {
+    "product": "Clean Code",
+    "qty": 3,
+    "subtotal": 104.69999999999999
+   }
+  ],
+  "subtotal": 104.69999999999999,
+  "discountAmount": 5.0,
+  "total": 99.69999999999999,
+  "placedAt": "2026-07-23T21:24:25.018652"
+ }
+]
